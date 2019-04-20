@@ -59,12 +59,29 @@ def pintarMapa(cidades, rodovias, master, w, result=None):
         #w.Label(master, text=cidades[c].nome, width=cidades[c].x, height=cidades[c].y+5)
     if result != None:
         length = len(result) 
-        
+        tam = 0
         for i in range(length-1): 
             c1, c2 = result[i], result[i+1]
+            #==
+            '''print(c1.nome)
+            str = "{},{}".format(c1.nome, c2.nome)
+            print(rodovias[str])'''
+
+            '''p = x.replace('\n', '').split(', ')
+            ei = cidades[p[0]]
+            ef = cidades[p[1]]
+            dist = math.sqrt( (ef.x-ei.x)**2 + (ef.y-ei.y)**2 )
+            tempoDeViagem = dist / int(p[5])
+            infoEdge = {
+                'situacaoPista':int(p[2]),
+                'precoPedagios':float(p[3]),
+                'perigo':int(p[4]),
+                'tempoDeViagem':tempoDeViagem
+                }
+            rodovias["{},{}".format(p[0], p[1])] = infoEdge'''
 
             w.create_line(cidades[c1].x, cidades[c1].y, cidades[c2].x, cidades[c2].y, fill="red")
-        
+    return 0
 
 
 def execButton(graph, cost_func, inicio, fim, textRes):
@@ -75,7 +92,8 @@ def execButton(graph, cost_func, inicio, fim, textRes):
             path = find_path(graph, inicio.get(), fim.get(), cost_func=cost_func)
             #print("veja: ",path)
             caminho = path.nodes
-            texto = "de '{}' ate '{}' o menor caminho eh {}".format(caminho[0], caminho[-1], caminho)
+            
+            texto = "de '{}' ate '{}' o menor caminho eh {} com custo de {}km".format(caminho[0], caminho[-1], caminho, int(path.total_cost*100)/100)
             
             print(texto)
             textRes.config(text=texto)
@@ -129,7 +147,8 @@ def main():
             'situacaoPista':int(p[2]),
             'precoPedagios':float(p[3]),
             'perigo':int(p[4]),
-            'tempoDeViagem':tempoDeViagem
+            'tempoDeViagem':tempoDeViagem,
+            'distancia':dist
             }
         rodovias["{},{}".format(p[0], p[1])] = infoEdge
         
@@ -143,7 +162,7 @@ def main():
     pesos = {'sp': 3, 'pp': 3, 'tv': 3, 'p': 3}
     
 
-    cost_func = lambda u, v, e, prev_e: e['situacaoPista'] + e['precoPedagios']+ e['perigo'] + e['tempoDeViagem']
+    cost_func = lambda u, v, e, prev_e: e['distancia']#e['situacaoPista'] + e['precoPedagios']+ e['perigo'] + e['tempoDeViagem']
     #path = find_path(graph, 'a', 'z', cost_func=cost_func)
     #print(path.nodes)
     
